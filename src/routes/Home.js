@@ -13,10 +13,11 @@ const Home = () => {
   const getTweets = async () => {
     const dbTweets = await getDocs(collection(dbService, "tweets"));
     dbTweets.forEach((doc) => {
-      const nweetObj = {
+      const tweetObj = {
         ...doc.data(),
         id: doc.id,
-      }
+      };
+      setTweets((prev) => [tweetObj, ...prev]);
     });
   }
 
@@ -50,6 +51,15 @@ const Home = () => {
         />
         <input type="submit" value="Tweet" />
       </form>
+      <div>
+        {tweets.map((tweet) => (
+          <div key={tweet.id}>
+            <h4>{tweet.tweet}</h4>
+          </div>
+
+        ))}
+
+      </div>
     </div>
   );
 };
