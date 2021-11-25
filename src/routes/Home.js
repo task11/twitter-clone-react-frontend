@@ -11,13 +11,8 @@ const Home = () => {
   const [tweets, setTweets] = useState([]);
 
   const getTweets = async () => {
-    const dbTweets = await getDocs(collection(dbService, "tweet"));
-    dbTweets.forEach((doc) => {
-      const tweetObj = {
-        ...doc.data(),
-        id: doc.id,
-      }
-    });
+    const dbTweets = await getDocs(collection(dbService, "tweets"));
+    dbTweets.forEach((doc) => console.log(doc.data()));
   }
 
   useEffect(() => {
