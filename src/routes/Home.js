@@ -12,7 +12,12 @@ const Home = () => {
 
   const getTweets = async () => {
     const dbTweets = await getDocs(collection(dbService, "tweets"));
-    dbTweets.forEach((doc) => console.log(doc.data()));
+    dbTweets.forEach((doc) => {
+      const nweetObj = {
+        ...doc.data(),
+        id: doc.id,
+      }
+    });
   }
 
   useEffect(() => {
@@ -32,6 +37,7 @@ const Home = () => {
     const { target: { value } } = event;
     setTweet(value);
   };
+  console.log(tweets);
   return (
     <div>
       <form onSubmit={onSubmit}>
