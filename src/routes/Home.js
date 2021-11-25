@@ -1,9 +1,29 @@
 import { dbService } from "myBase";
-import React, { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+  collection,
+  addDoc,
+  getDocs
+} from "firebase/firestore";
 
 const Home = () => {
   const [tweet, setTweet] = useState("");
+  const [tweets, setTweets] = useState([]);
+
+  const getTweets = async () => {
+    const dbTweets = await getDocs(collection(dbService, "tweet"));
+    dbTweets.forEach((doc) => {
+      const tweetObj = {
+        ...doc.data(),
+        id: doc.id,
+      }
+    });
+  }
+
+  useEffect(() => {
+    getTweets();
+  }, [])
+
   const onSubmit = async (event) => {
     event.preventDefault();
     const add = await addDoc(collection(dbService, "tweets"), {
