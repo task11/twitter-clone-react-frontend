@@ -1,14 +1,14 @@
 ---
 name: github issue template
-about: github isuue 관리를 위한 템플릿
+about: github isuue & trouble 관리를 위한 템플릿
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-## 목적
+## 현상
 >
-## 작업 상세 내용
+## 조치 내용
 - [ ]
 ## 참고 사항
