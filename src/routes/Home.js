@@ -6,7 +6,8 @@ import {
   getDocs
 } from "firebase/firestore";
 
-const Home = () => {
+const Home = ({ userObj }) => {
+  console.log(userObj);
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
 
@@ -16,6 +17,7 @@ const Home = () => {
       const tweetObj = {
         ...doc.data(),
         id: doc.id,
+        creatorId: 1122,
       };
       setTweets((prev) => [tweetObj, ...prev]);
     });
@@ -28,7 +30,7 @@ const Home = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     const add = await addDoc(collection(dbService, "tweets"), {
-      tweet,
+      text: tweet,
       createdAt: Date.now(),
 
     });
