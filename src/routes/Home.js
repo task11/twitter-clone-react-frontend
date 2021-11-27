@@ -7,7 +7,7 @@ import {
 } from "firebase/firestore";
 
 const Home = ({ userObj }) => {
-  console.log(userObj);
+
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
 
@@ -17,7 +17,6 @@ const Home = ({ userObj }) => {
       const tweetObj = {
         ...doc.data(),
         id: doc.id,
-        creatorId: 1122,
       };
       setTweets((prev) => [tweetObj, ...prev]);
     });
@@ -32,7 +31,7 @@ const Home = ({ userObj }) => {
     const add = await addDoc(collection(dbService, "tweets"), {
       text: tweet,
       createdAt: Date.now(),
-
+      creatorId: userObj.uid,
     });
     setTweet("");
   };
@@ -56,7 +55,7 @@ const Home = ({ userObj }) => {
       <div>
         {tweets.map((tweet) => (
           <div key={tweet.id}>
-            <h4>{tweet.tweet}</h4>
+            <h4>{tweet.text}</h4>
           </div>
 
         ))}
