@@ -1,4 +1,4 @@
-import { deleteDoc, doc } from "@firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "@firebase/firestore";
 import { dbService } from "myBase";
 import React, { useState } from "react";
 
@@ -8,22 +8,40 @@ const Tweet = ({ tweetObj, isOwner }) => {
   const tweetTextRef = doc(dbService, "tweets", `${tweetObj.id}`);
   const onDeleteClick = async () => {
     const ok = window.confirm("Are you sure you want to delete this tweet?");
-    console.log(ok);
     if (ok) {
       await deleteDoc(tweetTextRef);
     }
   };
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    await updateDoc(tweetTextRef, {
+      text: newTweet,
+    });
+    setEditing(false);
+  }
 
   const toggleEditing = () => setEditing((prev) => !prev); // 토글 상태값 변경
-
+  const onChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setNewTweet(value);
+  }
   return (
     <div>
       {
         editing
           ? (
             <>
-              <form>
-                <input value={newTweet} required />
+              <form onSubmit={onSubmit}>
+                <input
+                  type="text"
+                  placeholder="Edit your tweet"
+                  value={newTweet}
+                  required
+                  onChange={onChange}
+                />
+                <input type="submit" value="Update Tweet" />
               </form>
               <button onClick={toggleEditing}>Cancel</button>
             </>
@@ -37,7 +55,7 @@ const Tweet = ({ tweetObj, isOwner }) => {
                 (
                   <>
                     <button onClick={onDeleteClick} >Delete Tweet</button>
-                    <button>Edit Tweet</button>
+                    <button onClick={toggleEditing}>Edit Tweet</button>
                   </>
                 )
               }
