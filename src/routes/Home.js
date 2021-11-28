@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 import {
   collection,
   addDoc,
-  getDocs
+  getDocs,
+  onSnapshot,
+  query,
+  orderBy
 } from "firebase/firestore";
 
 const Home = ({ userObj }) => {
@@ -11,24 +14,37 @@ const Home = ({ userObj }) => {
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
 
-  const getTweets = async () => {
-    const dbTweets = await getDocs(collection(dbService, "tweets"));
-    dbTweets.forEach((doc) => {
-      const tweetObj = {
-        ...doc.data(),
-        id: doc.id,
-      };
-      setTweets((prev) => [tweetObj, ...prev]);
-    });
-  }
+  // const getTweets = async () => {
+  //   const dbTweets = await getDocs(collection(dbService, "tweets"));
+  //   dbTweets.forEach((doc) => {
+  //     const tweetObj = {
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     };
+  //     setTweets((prev) => [tweetObj, ...prev]);
+  //   });
+  // }
 
   useEffect(() => {
-    getTweets();
+    //getTweets();
+    const q = query(collection(dbService, "tweets"), orderBy('createdAt'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tweetArray = querySnapshot.docs.map(doc => {
+        return {
+          id: doc.id,
+          ...doc.data()
+        }
+      });
+      setTweets(tweetArray);
+      console.log(tweetArray);
+
+
+    });
   }, [])
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const add = await addDoc(collection(dbService, "tweets"), {
+    await addDoc(collection(dbService, "tweets"), {
       text: tweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
