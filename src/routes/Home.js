@@ -1,9 +1,10 @@
-import { dbService } from "myBase";
+import { dbService, storageService } from "myBase";
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   collection,
-  addDoc,
-  getDocs,
+  // addDoc,
+  // getDocs,
   onSnapshot,
   query,
   orderBy
@@ -46,13 +47,17 @@ const Home = ({ userObj }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    await addDoc(collection(dbService, "tweets"), {
-      text: tweet,
-      createdAt: Date.now(),
-      creatorId: userObj.uid,
-    });
-    setTweet("");
+    const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+    const response = await uploadString(fileRef, attachment, "data_url");
+    console.log(response);
+    // await addDoc(collection(dbService, "tweets"), {
+    //   text: tweet,
+    //   createdAt: Date.now(),
+    //   creatorId: userObj.uid,
+    // });
+    // setTweet("");
   };
+
   const onChange = (event) => {
     const { target: { value } } = event;
     setTweet(value);
