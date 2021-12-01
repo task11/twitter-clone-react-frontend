@@ -71,6 +71,8 @@ const Home = ({ userObj }) => {
     reader.readAsDataURL(imgFile);
   };
 
+  const onClearAttachment = () => setAttachment(null);
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -83,7 +85,11 @@ const Home = ({ userObj }) => {
         />
         <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="Tweet" />
-        {attachment && <img src={attachment} width="50px" height="50px" />}
+        {attachment &&
+          <div>
+            <img src={attachment} width="50px" height="50px" />
+            <button onClick={onClearAttachment}>Clear</button>
+          </div>}
       </form>
       <div>
         {tweets.map((tweet) => (
