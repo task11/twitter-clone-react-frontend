@@ -1,5 +1,6 @@
 import { deleteDoc, doc, updateDoc } from "@firebase/firestore";
-import { dbService } from "myBase";
+import { deleteObject, ref } from "@firebase/storage";
+import { dbService, storageService } from "myBase";
 import React, { useState } from "react";
 
 const Tweet = ({ tweetObj, isOwner }) => {
@@ -10,6 +11,9 @@ const Tweet = ({ tweetObj, isOwner }) => {
     const ok = window.confirm("Are you sure you want to delete this tweet?");
     if (ok) {
       await deleteDoc(tweetTextRef);
+      if (tweetObj.attachmentURL) {
+        await deleteObject(ref(storageService, tweetObj.attachmentURL));
+      }
     }
   };
   const onSubmit = async (event) => {
