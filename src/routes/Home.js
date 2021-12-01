@@ -53,7 +53,7 @@ const Home = ({ userObj }) => {
     if (attachment !== "") {
       const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
       const response = await uploadString(attachmentRef, attachment, "data_url");
-      const attachmentURL = await getDownloadURL(response.ref);
+      attachmentURL = await getDownloadURL(response.ref);
     }
 
     const tweetObj = {
