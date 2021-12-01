@@ -3,19 +3,24 @@ import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   collection,
-  // addDoc,
+  addDoc,
   // getDocs,
   onSnapshot,
   query,
   orderBy
 } from "firebase/firestore";
+import {
+  ref,
+  uploadString,
+  getDownloadURL
+} from "@firebase/storage";
 import Tweet from "components/Tweet";
 
 const Home = ({ userObj }) => {
 
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
 
   // const getTweets = async () => {
   //   const dbTweets = await getDocs(collection(dbService, "tweets"));
@@ -39,23 +44,28 @@ const Home = ({ userObj }) => {
         }
       });
       setTweets(tweetArray);
-      console.log(tweetArray);
-
-
     });
   }, [])
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-    const response = await uploadString(fileRef, attachment, "data_url");
-    console.log(response);
-    // await addDoc(collection(dbService, "tweets"), {
-    //   text: tweet,
-    //   createdAt: Date.now(),
-    //   creatorId: userObj.uid,
-    // });
-    // setTweet("");
+    let attachmentURL = "";
+    if (attachment !== "") {
+      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+      const response = await uploadString(attachmentRef, attachment, "data_url");
+      const attachmentURL = await getDownloadURL(response.ref);
+    }
+
+    const tweetObj = {
+      text: tweet,
+      createdAt: Date.now(),
+      creatorId: userObj.uid,
+      attachmentURL,
+    }
+
+    await addDoc(collection(dbService, "tweets"), tweetObj);
+    setTweet("");
+    setAttachment("");
   };
 
   const onChange = (event) => {
@@ -76,7 +86,7 @@ const Home = ({ userObj }) => {
     reader.readAsDataURL(imgFile);
   };
 
-  const onClearAttachment = () => setAttachment(null);
+  const onClearAttachment = () => setAttachment("");
 
   return (
     <div>
