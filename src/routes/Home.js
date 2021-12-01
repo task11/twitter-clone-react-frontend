@@ -14,6 +14,7 @@ const Home = ({ userObj }) => {
 
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
+  const [attachment, setAttachment] = useState();
 
   // const getTweets = async () => {
   //   const dbTweets = await getDocs(collection(dbService, "tweets"));
@@ -63,7 +64,8 @@ const Home = ({ userObj }) => {
     //use fileReader API
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
-
+      const { currentTarget: { result } } = finishedEvent;
+      setAttachment(result);
     };
 
     reader.readAsDataURL(imgFile);
@@ -81,6 +83,7 @@ const Home = ({ userObj }) => {
         />
         <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="Tweet" />
+        {attachment && <img src={attachment} width="50px" height="50px" />}
       </form>
       <div>
         {tweets.map((tweet) => (
