@@ -1,9 +1,9 @@
-import { collection } from "@firebase/firestore";
+import { query, collection, getDocs, where, orderBy } from "@firebase/firestore";
 import { authService, dbService } from "myBase";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 
-const Home = (userObj) => {
+const Profile = ({ userObj }) => {
   const navigate = useNavigate();
   const onLogOutClick = () => {
     authService.signOut();
@@ -11,12 +11,20 @@ const Home = (userObj) => {
   };
 
   const getMyTweets = async () => {
-    const tweets = await collection(dbService, "tweets")
+    const q = query(collection(dbService, "tweets"),
+      where("creatorId", "==", userObj.uid),
+      orderBy("createdAt"));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data());
+    })
+
   };
 
   useEffect(() => {
     getMyTweets();
-  }, [])
+  }, []);
 
 
   return (
@@ -24,4 +32,4 @@ const Home = (userObj) => {
   )
 };
 
-export default Home;
+export default Profile;
