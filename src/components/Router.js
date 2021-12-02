@@ -27,7 +27,7 @@ const AppRouter = ({ isLoggedIn, userObj }) => {
           (
             <Route
               path="/"
-              element={<Auth />}
+              element={<Auth userObj={userObj} />}
             />
           )
         }
