@@ -1,3 +1,4 @@
+import { updateProfile } from "@firebase/auth";
 import { query, collection, getDocs, where, orderBy } from "@firebase/firestore";
 import { authService, dbService } from "myBase";
 import React, { useEffect } from "react";
@@ -29,10 +30,13 @@ const Profile = ({ userObj }) => {
     getMyTweets();
   }, []);
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-
-
+    if (userObj.displayName !== newDisplayName) {
+      await updateProfile(userObj, {
+        displayName: newDisplayName,
+      });
+    }
   };
 
   const onChange = (event) => {
@@ -47,7 +51,6 @@ const Profile = ({ userObj }) => {
       <form onSubmit={onSubmit}>
         <input type="text" placeholder="Display Name" onChange={onChange} value={newDisplayName} />
         <input type="submit" value="change name" />
-
       </form>
       <button onClick={onLogOutClick}>Log Out</button>
     </>
