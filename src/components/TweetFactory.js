@@ -1,9 +1,12 @@
 import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import React from "react";
 import { addDoc, collection } from "@firebase/firestore";
+import React, { useState } from "react";
+import { dbService, storageService } from "myBase";
 
 const TweetFactory = ({ userObj }) => {
+  const [tweet, setTweet] = useState("");
+  const [attachment, setAttachment] = useState("");
   const onSubmit = async (event) => {
     event.preventDefault();
     let attachmentURL = "";
@@ -57,7 +60,7 @@ const TweetFactory = ({ userObj }) => {
       <input type="submit" value="Tweet" />
       {attachment &&
         <div>
-          <img src={attachment} width="50px" height="50px" />
+          <img src={attachment} width="50px" height="50px" alt={tweet} />
           <button onClick={onClearAttachment}>Clear</button>
         </div>}
     </form>

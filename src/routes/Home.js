@@ -1,27 +1,20 @@
-import { dbService, storageService } from "myBase";
+import { dbService } from "myBase";
 import React, { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import {
   collection,
-  addDoc,
-  // getDocs,
+
   onSnapshot,
   query,
   orderBy
 } from "firebase/firestore";
-import {
-  ref,
-  uploadString,
-  getDownloadURL
-} from "@firebase/storage";
 import Tweet from "components/Tweet";
 import TweetFactory from "components/TweetFactory";
 
 const Home = ({ userObj }) => {
 
-  const [tweet, setTweet] = useState("");
+
   const [tweets, setTweets] = useState([]);
-  const [attachment, setAttachment] = useState("");
+
 
   // const getTweets = async () => {
   //   const dbTweets = await getDocs(collection(dbService, "tweets"));
@@ -37,7 +30,7 @@ const Home = ({ userObj }) => {
   useEffect(() => {
     //getTweets();
     const q = query(collection(dbService, "tweets"), orderBy('createdAt'));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    onSnapshot(q, (querySnapshot) => {
       const tweetArray = querySnapshot.docs.map(doc => {
         return {
           id: doc.id,
