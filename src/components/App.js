@@ -19,9 +19,15 @@ function App() {
       setInit(true);
     });
   }, [])
+
+  const refreshAuth = () => {
+    const user = authService.currentUser;
+    setUserObj(Object.assign({}, user));
+  };
+
   return (
     <div>
-      {init ? <AppRouter isLoggedIn={isLoggedIn} userObj={userObj} /> : "Initializing..."}
+      {init ? <AppRouter isLoggedIn={isLoggedIn} refreshAuth={refreshAuth} userObj={userObj} /> : "Initializing..."}
       <div>
         <footer>&copy; {new Date().getFullYear()} twitter clone</footer>
       </div>

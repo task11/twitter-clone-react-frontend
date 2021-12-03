@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useState } from "react/cjs/react.development";
 
-const Profile = ({ userObj }) => {
+const Profile = ({ refreshAuth, userObj }) => {
   const navigate = useNavigate();
   const [newDisplayName, setDisplayName] = useState(userObj.displayName);
 
@@ -36,6 +36,7 @@ const Profile = ({ userObj }) => {
       await updateProfile(userObj, {
         displayName: newDisplayName,
       });
+      refreshAuth();
     }
   };
 
