@@ -1,9 +1,8 @@
 import { updateProfile } from "@firebase/auth";
 import { query, collection, getDocs, where, orderBy } from "@firebase/firestore";
 import { authService, dbService } from "myBase";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useState } from "react/cjs/react.development";
 
 const Profile = ({ refreshAuth, userObj }) => {
   const navigate = useNavigate();
