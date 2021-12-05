@@ -28,7 +28,6 @@ const AuthForm = () => {
           password
         )
       }
-      console.log(data);
     } catch (error) {
       setError(error.message);
     }
