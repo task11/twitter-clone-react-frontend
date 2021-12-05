@@ -1,4 +1,4 @@
-import { dbService } from "myBase";
+import { authService, dbService } from "myBase";
 import React, { useEffect, useState } from "react";
 import {
   collection,
@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import Tweet from "components/Tweet";
 import TweetFactory from "components/TweetFactory";
+import { onAuthStateChanged } from "@firebase/auth";
 
 const Home = ({ userObj }) => {
 
@@ -30,7 +31,7 @@ const Home = ({ userObj }) => {
   useEffect(() => {
     //getTweets();
     const q = query(collection(dbService, "tweets"), orderBy('createdAt'));
-    onSnapshot(q, (querySnapshot) => {
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const tweetArray = querySnapshot.docs.map(doc => {
         return {
           id: doc.id,
@@ -39,7 +40,15 @@ const Home = ({ userObj }) => {
       });
       setTweets(tweetArray);
     });
+
+    onAuthStateChanged(authService, (user) => {
+      if (user == null) {
+        unsubscribe();
+      }
+    });
   }, [])
+
+
 
 
 
