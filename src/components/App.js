@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 import AppRouter from "components/Router";
 import { authService } from "myBase"
+import { updateProfile } from "@firebase/auth";
 
 function App() {
   const [init, setInit] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   //usefull change Page (use Auth)
   const [userObj, setUserObj] = useState(null);
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
-        setIsLoggedIn(true);
-        setUserObj(user);
+        setUserObj({
+          displayName: user.displayName,
+          uid: user.uid,
+          updateProfile: (args) => updateProfile(user, { displayName: user.displayName }),
+        });
       } else {
-        setIsLoggedIn(false);
         setUserObj(null);
       }
       setInit(true);
@@ -22,12 +24,17 @@ function App() {
   }, [])
 
   const refreshAuth = () => {
-    setUserObj(Object.assign({}, user));
+    const user = authService.currentUser;
+    setUserObj({
+      displayName: user.displayName,
+      uid: user.uid,
+      updateProfile: (args) => updateProfile(user, { displayName: user.displayName }),
+    });
   };
 
   return (
     <div>
-      {init ? <AppRouter isLoggedIn={isLoggedIn} refreshAuth={refreshAuth} userObj={userObj} /> : "Initializing..."}
+      {init ? <AppRouter isLoggedIn={Boolean(userObj)} refreshAuth={refreshAuth} userObj={userObj} /> : "Initializing..."}
       <div>
         <footer>&copy; {new Date().getFullYear()} twitter clone</footer>
       </div>

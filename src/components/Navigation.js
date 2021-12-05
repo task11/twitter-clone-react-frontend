@@ -5,6 +5,7 @@ import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 const Navigation = ({ userObj }) => {
+  console.log(userObj.displayName);
   return (
     <nav>
       <ul style={{ display: "flex", justifyContent: "center", marginTop: 50 }}>
